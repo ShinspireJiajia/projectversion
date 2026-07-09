@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>新合達大平台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style-base.css" />
+  <link rel="stylesheet" href="css/page-entry.css" />
+</head>
+<body>
+  <div class="entry-page" id="entry-chooser" hidden>
+    <div class="card entry-card">
+      <p class="eyebrow">新合達大平台</p>
+      <h1>請選擇要進入的入口</h1>
+      <a class="btn entry-btn" href="login.html"><i class="fa-solid fa-user-shield"></i> 新合達管理後台</a>
+      <a class="btn secondary entry-btn" href="biz-login.html"><i class="fa-solid fa-building"></i> 建商租戶服務入口</a>
+    </div>
+  </div>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth-service.js"></script>
+  <script src="js/biz-auth-service.js"></script>
+  <script>
+    // 進入點：依登入狀態導向對應主控台（純前端判斷，不呼叫後端）；兩邊都未登入時顯示入口選擇畫面
+    if (AuthService.isLoggedIn()) {
+      location.replace('shell.html');
+    } else if (BizAuthService.isLoggedIn()) {
+      location.replace('biz-shell.html');
+    } else {
+      document.getElementById('entry-chooser').hidden = false;
+    }
+  </script>
+</body>
+</html>

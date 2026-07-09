@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style-base.css" />
+  <link rel="stylesheet" href="css/layout-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="brand">新合達大平台</p>
+      <nav>
+        <a href="#" data-group="tenants" data-src="pages/tenant-list.html">
+          <i class="fa-solid fa-building"></i> 建商租戶
+        </a>
+        <a href="#" data-group="plans" data-src="pages/plan-list.html">
+          <i class="fa-solid fa-layer-group"></i> 合作方案
+        </a>
+        <a href="#" data-group="notifications" data-src="pages/notification-list.html">
+          <i class="fa-solid fa-bullhorn"></i> 通知公告
+        </a>
+        <a href="#" data-group="tickets" data-src="pages/ticket-list.html">
+          <i class="fa-solid fa-headset"></i> 留言工單
+        </a>
+        <a href="#" data-group="versions" data-src="pages/version-list.html">
+          <i class="fa-solid fa-code-branch"></i> 版本管理
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="user-name" id="user-name"></p>
+        <button class="btn secondary" id="logout-btn">登出</button>
+      </div>
+    </aside>
+    <main class="content">
+      <iframe class="content-frame" id="content-frame" name="content-frame" title="功能內容"></iframe>
+    </main>
+  </div>
+
+  <script src="js/auth-service.js"></script>
+  <script src="js/layout-shell.js"></script>
+</body>
+</html>

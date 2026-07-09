@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>建商租戶服務入口｜新合達大平台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style-base.css" />
+  <link rel="stylesheet" href="css/biz-theme.css" />
+  <link rel="stylesheet" href="css/layout-biz-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="brand" id="brand-tenant-name">建商租戶</p>
+      <p class="brand-sub">建商租戶服務入口</p>
+      <nav>
+        <a href="#" data-group="dashboard" data-src="pages/biz-dashboard.html">
+          <i class="fa-solid fa-house"></i> 首頁
+        </a>
+        <a href="#" data-group="notifications" data-src="pages/biz-notification-list.html">
+          <i class="fa-solid fa-bullhorn"></i> 公告與通知
+        </a>
+        <a href="#" data-group="tickets" data-src="pages/biz-ticket-list.html">
+          <i class="fa-solid fa-comments"></i> 留言板
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="version-tag" id="version-tag"></p>
+        <p class="user-name" id="user-name"></p>
+        <button class="btn secondary" id="logout-btn">登出</button>
+      </div>
+    </aside>
+    <main class="content">
+      <iframe class="content-frame" id="content-frame" name="content-frame" title="功能內容"></iframe>
+    </main>
+  </div>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/biz-auth-service.js"></script>
+  <script src="js/layout-biz-shell.js"></script>
+</body>
+</html>

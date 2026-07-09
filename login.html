@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>管理者登入｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style-base.css" />
+  <link rel="stylesheet" href="css/page-login.css" />
+</head>
+<body>
+  <div class="login-page">
+    <form class="card login-card" id="login-form">
+      <p class="eyebrow">新合達大平台</p>
+      <h1><i class="fa-solid fa-lock"></i> 管理者登入</h1>
+
+      <div class="field">
+        <label for="account">帳號</label>
+        <input id="account" name="account" type="text" autocomplete="username" />
+      </div>
+
+      <div class="field">
+        <label for="password">密碼</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" />
+      </div>
+
+      <p class="error-text" id="error-message" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">登入</button>
+
+      <p class="demo-hint">示範帳號：adminuser／55688（僅供前端展示，未串接後端）</p>
+    </form>
+  </div>
+
+  <script src="js/auth-service.js"></script>
+  <script src="js/page-login.js"></script>
+</body>
+</html>
