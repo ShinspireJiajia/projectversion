@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>首頁｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-dashboard.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1 id="welcome-title">首頁</h1>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <div id="dashboard-content" hidden>
+    <div class="card info-card">
+      <div class="info-row"><span class="info-label">統一編號</span><span id="info-tax-id"></span></div>
+      <div class="info-row"><span class="info-label">合約期間</span><span id="info-contract"></span></div>
+      <div class="info-row"><span class="info-label">目前方案</span><span id="info-plan"></span></div>
+      <div class="info-row"><span class="info-label">目前程式版本</span><span id="info-version"></span></div>
+    </div>
+
+    <div class="stat-grid">
+      <a class="stat-tile" id="stat-unread" href="biz-notification-list.html">
+        <div class="stat-num" id="stat-unread-num">0</div>
+        <div class="stat-label">未讀公告與通知</div>
+      </a>
+      <a class="stat-tile" id="stat-open-tickets" href="biz-ticket-list.html">
+        <div class="stat-num" id="stat-open-tickets-num">0</div>
+        <div class="stat-label">待處理留言</div>
+      </a>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-head">
+          <h2>最新公告與通知</h2>
+          <a href="biz-notification-list.html">查看全部</a>
+        </div>
+        <ul class="preview-list" id="notification-preview"></ul>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>最新留言</h2>
+          <a href="biz-ticket-list.html">查看全部</a>
+        </div>
+        <ul class="preview-list" id="ticket-preview"></ul>
+        <a class="btn new-ticket-btn" href="biz-ticket-form.html"><i class="fa-solid fa-pen"></i> 新增留言</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-dashboard.js"></script>
+</body>
+</html>
