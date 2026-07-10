@@ -8,6 +8,7 @@
   const navLinks = Array.from(document.querySelectorAll('nav a[data-src]'));
   const frame = document.getElementById('content-frame');
   const userNameEl = document.getElementById('user-name');
+  const changePasswordLink = document.getElementById('change-password-link');
   const logoutBtn = document.getElementById('logout-btn');
 
   userNameEl.textContent = AuthService.getUserName();
@@ -24,6 +25,13 @@
       frame.src = link.dataset.src;
       setActiveGroup(link.dataset.group);
     });
+  });
+
+  // 變更密碼為帳號自身操作，非主選單項目，切到該頁時取消主選單反白
+  changePasswordLink.addEventListener('click', function (event) {
+    event.preventDefault();
+    frame.src = changePasswordLink.dataset.src;
+    setActiveGroup(null);
   });
 
   logoutBtn.addEventListener('click', function () {

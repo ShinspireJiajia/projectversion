@@ -17,7 +17,11 @@ const MockData = (function () {
   // 通知公告新增「租戶已讀」追蹤（notificationReads，依租戶記錄已讀通知 id），升版避免舊快取缺欄位
   // v10：新增建商租戶端使用者帳號（tenantUsers：帳號僅在租戶內唯一，不同租戶可重複使用同一帳號代碼），
   // 供建商登入頁改為統編＋帳號＋密碼三欄驗證，升版避免舊快取缺欄位
-  const STORAGE_KEY = 'pt_admin_mock_db_v10';
+  // v11：租戶端使用者新增 CId／CTitle／CEmail／CIsPrimary（新增建商時同步建立主要聯絡人＝平台管理者帳號，
+  // 並可在建商平台新增其他人員），新增 sentEmails（模擬帳號資訊信件發送記錄，供忘記密碼與人員新增流程共用），升版避免舊快取缺欄位
+  // v12：新增大平台端管理者帳號（adminAccounts：帳號／密碼／姓名），登入頁改為對這份清單做帳號密碼驗證，
+  // 不再只認單一硬編碼示範帳號；原本承辦人名單（getAdminUserList）改為由這份帳號清單的姓名衍生，避免兩份名單失去同步，升版避免舊快取缺欄位
+  const STORAGE_KEY = 'pt_admin_mock_db_v12';
 
   const EnumStatusCode = {
     Success: 0,
@@ -156,7 +160,6 @@ const MockData = (function () {
       CBuildCaseMax: 8,
       CPlanVersionId: 201,
       CUpdatedAt: '2026-07-06T09:00:00.000Z',
-      ModuleOverrides: [{ CModuleCode: 'SITE_MANAGEMENT', CIsGrant: true }],
       Notes: [
         { CCreatedAt: '2026-06-20T10:15:00.000Z', CCreatedBy: '預設管理者', CContent: '客戶已確認升級至進階方案，合約結束日順延一年。' }
       ]
@@ -172,7 +175,6 @@ const MockData = (function () {
       CBuildCaseMax: 5,
       CPlanVersionId: 101,
       CUpdatedAt: '2026-06-28T14:30:00.000Z',
-      ModuleOverrides: [],
       Notes: []
     },
     {
@@ -186,7 +188,6 @@ const MockData = (function () {
       CBuildCaseMax: 3,
       CPlanVersionId: null,
       CUpdatedAt: '2025-01-01T00:00:00.000Z',
-      ModuleOverrides: [],
       Notes: []
     }
   ];
@@ -194,10 +195,16 @@ const MockData = (function () {
   // 建商租戶端使用者帳號：帳號僅在同一租戶內唯一（不同租戶可各自使用相同帳號代碼），
   // 對齊已確認的登入流程規格——統編先解析出租戶，帳號密碼再對該租戶底下的使用者做驗證
   const DEFAULT_TENANT_USERS = [
-    { CTenantId: 'LUFU', CAccount: 'lufu.manager', CPassword: '55688', CDisplayName: '陸府-林經理' },
-    { CTenantId: 'LUFU', CAccount: 'lufu.assist', CPassword: '55688', CDisplayName: '陸府-陳助理' },
-    { CTenantId: 'SMC', CAccount: 'smc.miss', CPassword: '55688', CDisplayName: '三民-王小姐' },
-    { CTenantId: 'SMC', CAccount: 'smc.director', CPassword: '55688', CDisplayName: '三民-李協理' }
+    { CId: 1, CTenantId: 'LUFU', CAccount: 'lufu.manager', CPassword: '55688', CDisplayName: '陸府-林經理', CTitle: '專案經理', CEmail: 'lufu.manager@example.com', CIsPrimary: true },
+    { CId: 2, CTenantId: 'LUFU', CAccount: 'lufu.assist', CPassword: '55688', CDisplayName: '陸府-陳助理', CTitle: '專案助理', CEmail: 'lufu.assist@example.com', CIsPrimary: false },
+    { CId: 3, CTenantId: 'SMC', CAccount: 'smc.miss', CPassword: '55688', CDisplayName: '三民-王小姐', CTitle: '客服主管', CEmail: 'smc.miss@example.com', CIsPrimary: true },
+    { CId: 4, CTenantId: 'SMC', CAccount: 'smc.director', CPassword: '55688', CDisplayName: '三民-李協理', CTitle: '協理', CEmail: 'smc.director@example.com', CIsPrimary: false }
+  ];
+
+  // 模擬帳號資訊信件發送記錄：新增建商（建立主要聯絡人帳號）／建商平台新增人員／忘記密碼重設，都會各留一筆，
+  // 僅記錄事由與收件資訊，密碼不記錄於此（避免明碼長期留存），密碼僅於當次操作的回傳結果中一次性提供畫面預覽
+  const DEFAULT_SENT_EMAILS = [
+    { CTenantId: 'LUFU', CToEmail: 'lufu.manager@example.com', CAccount: 'lufu.manager', CReason: '建立租戶初始登入帳號', CCreatedAt: '2025-01-01T09:00:00.000Z' }
   ];
 
   // 程式版本歷史：一筆紀錄可套用多個租戶（共用主線版本），亦可能只套用單一租戶（客製分支尚未合併回主線）。
@@ -235,8 +242,13 @@ const MockData = (function () {
     }
   ];
 
-  // 通知管理／留言工單承辦人（大平台端）候選名單，供通知建立人與工單承辦人下拉選單使用
-  const DEFAULT_ADMIN_USERS = ['預設管理者', '客服－陳姿伶', '客服－黃建宏'];
+  // 大平台端登入人員帳號：帳號全域唯一（大平台僅一套管理者帳號體系，不像建商租戶端按租戶分別建立），
+  // 登入頁改為對這份清單做帳號密碼驗證；姓名同時也是通知管理／留言工單承辦人下拉選單的來源，避免兩份名單失去同步
+  const DEFAULT_ADMIN_ACCOUNTS = [
+    { CId: 1, CAccount: 'adminuser', CPassword: '55688', CDisplayName: '預設管理者' },
+    { CId: 2, CAccount: 'chen.ling', CPassword: '55688', CDisplayName: '客服－陳姿伶' },
+    { CId: 3, CAccount: 'huang.jh', CPassword: '55688', CDisplayName: '客服－黃建宏' }
+  ];
 
   // 通知公告：scopeType 全體廣播(all)／指定租戶(targeted)；publishStatus 草稿(draft)／已發布(published)／已下架(archived)
   const DEFAULT_NOTIFICATIONS = [
@@ -434,12 +446,16 @@ const MockData = (function () {
     if (!db.notifications) { db.notifications = DEFAULT_NOTIFICATIONS; dirty = true; }
     if (!db.tickets) { db.tickets = DEFAULT_TICKETS; dirty = true; }
     if (!db.versions) { db.versions = DEFAULT_VERSIONS; dirty = true; }
+    if (!db.sentEmails) { db.sentEmails = DEFAULT_SENT_EMAILS; dirty = true; }
+    if (!db.adminAccounts) { db.adminAccounts = DEFAULT_ADMIN_ACCOUNTS; dirty = true; }
     if (db.nextPlanId === undefined) { db.nextPlanId = 4; dirty = true; }
     if (db.nextVersionId === undefined) { db.nextVersionId = 302; dirty = true; }
     if (db.nextNotificationId === undefined) { db.nextNotificationId = 7; dirty = true; }
     if (db.nextTicketMessageId === undefined) { db.nextTicketMessageId = 100; dirty = true; }
     if (db.nextAppVersionRecordId === undefined) { db.nextAppVersionRecordId = 4; dirty = true; }
     if (db.nextTicketId === undefined) { db.nextTicketId = 6; dirty = true; }
+    if (db.nextTenantUserId === undefined) { db.nextTenantUserId = 5; dirty = true; }
+    if (db.nextAdminAccountId === undefined) { db.nextAdminAccountId = 4; dirty = true; }
     if (!db.notificationReads) { db.notificationReads = {}; dirty = true; }
 
     if (dirty) saveDb(db);
@@ -450,12 +466,36 @@ const MockData = (function () {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
   }
 
-  function ok(entries, message) {
-    return { StatusCode: EnumStatusCode.Success, Message: message || '', Entries: entries, TotalItems: Array.isArray(entries) ? entries.length : 1 };
+  // totalItemsOverride 供分頁查詢使用：Entries 只回傳當頁資料，但 TotalItems 需回報篩選後的總筆數
+  function ok(entries, message, totalItemsOverride) {
+    const totalItems = totalItemsOverride !== undefined ? totalItemsOverride : (Array.isArray(entries) ? entries.length : 1);
+    return { StatusCode: EnumStatusCode.Success, Message: message || '', Entries: entries, TotalItems: totalItems };
   }
 
   function fail(message) {
     return { StatusCode: EnumStatusCode.Fail, Message: message || '失敗', Entries: null, TotalItems: 0 };
+  }
+
+  // 模擬產生初始密碼／忘記密碼重設密碼，避免容易混淆的字元（0/O、1/I 等）
+  function generatePassword() {
+    const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    let pw = '';
+    for (let i = 0; i < 8; i++) {
+      pw += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return pw;
+  }
+
+  // 記錄一筆模擬帳號資訊信件發送：正式環境會實際寄出 Email，這裡只留存事由與收件資訊供事後查核，
+  // 密碼不落地保存於此紀錄，僅在觸發當次的回傳結果中提供畫面一次性預覽
+  function recordSentEmail(db, args) {
+    db.sentEmails.unshift({
+      CTenantId: args.tenantId,
+      CToEmail: args.toEmail,
+      CAccount: args.account,
+      CReason: args.reason,
+      CCreatedAt: new Date().toISOString()
+    });
   }
 
   // 開發狀況 → pill 樣式（style-base.css：good/neutral/critical）
@@ -577,9 +617,12 @@ const MockData = (function () {
   }
 
   // ---- 建商租戶 ----
-  function getTenantList() {
+  // args 可省略（既有呼叫端如下拉選單、biz-shell 皆不帶參數，維持回傳全部未分頁清單的既有行為）；
+  // 帶入 name／taxId／status 篩選條件，以及 page／pageSize 才會做篩選與分頁，TotalItems 回報篩選後（分頁前）的總筆數
+  function getTenantList(args) {
+    args = args || {};
     const db = loadDb();
-    const entries = db.tenants.map((t) => {
+    let entries = db.tenants.map((t) => {
       const plan = findPlanByVersionId(db, t.CPlanVersionId);
       return {
         CID: t.CID,
@@ -593,7 +636,25 @@ const MockData = (function () {
         CUpdatedAt: t.CUpdatedAt || null
       };
     });
-    return ok(entries);
+
+    if (args.name && args.name.trim()) {
+      const kw = args.name.trim().toLowerCase();
+      entries = entries.filter((t) => t.CName.toLowerCase().includes(kw) || t.CID.toLowerCase().includes(kw));
+    }
+    if (args.taxId && args.taxId.trim()) {
+      const kw = args.taxId.trim();
+      entries = entries.filter((t) => (t.CTaxId || '').includes(kw));
+    }
+    if (args.status !== undefined && args.status !== null && args.status !== '') {
+      entries = entries.filter((t) => t.CStatus === Number(args.status));
+    }
+
+    const totalItems = entries.length;
+    if (args.page && args.pageSize) {
+      const start = (args.page - 1) * args.pageSize;
+      entries = entries.slice(start, start + args.pageSize);
+    }
+    return ok(entries, '', totalItems);
   }
 
   function getTenantData(cid) {
@@ -617,11 +678,17 @@ const MockData = (function () {
     return ok({ CTenantId: tenant.CID, CTenantName: tenant.CName, CDisplayName: user.CDisplayName });
   }
 
+  // 新增建商時同步建立主要聯絡人帳號（即該租戶在建商平台的第一位使用者／平台管理者），
+  // 建立成功後模擬發送登入網址／帳號／密碼信件給該聯絡人，後續其他人員由該管理者登入建商平台自行新增
   function createTenant(args) {
     const db = loadDb();
     if (!args.CID) return fail('請輸入租戶代碼');
     if (!/^[A-Z0-9_-]+$/.test(args.CID)) return fail('租戶代碼格式不正確');
     if (db.tenants.some((x) => x.CID === args.CID)) return fail('租戶代碼已存在');
+    if (!args.CContactName || !args.CContactName.trim()) return fail('請輸入主要聯絡人姓名');
+    if (!args.CContactEmail || !args.CContactEmail.trim()) return fail('請輸入主要聯絡人 Email');
+    if (!args.CLoginAccount || !args.CLoginAccount.trim()) return fail('請輸入登入帳號');
+
     db.tenants.push({
       CID: args.CID,
       CName: args.CName,
@@ -633,11 +700,26 @@ const MockData = (function () {
       CBuildCaseMax: args.CBuildCaseMax,
       CPlanVersionId: args.CPlanVersionId,
       CUpdatedAt: new Date().toISOString(),
-      ModuleOverrides: [],
       Notes: []
     });
+
+    const account = args.CLoginAccount.trim();
+    const email = args.CContactEmail.trim();
+    const password = generatePassword();
+    db.tenantUsers.push({
+      CId: db.nextTenantUserId++,
+      CTenantId: args.CID,
+      CAccount: account,
+      CPassword: password,
+      CDisplayName: args.CContactName.trim(),
+      CTitle: (args.CContactTitle || '').trim(),
+      CEmail: email,
+      CIsPrimary: true
+    });
+    recordSentEmail(db, { tenantId: args.CID, toEmail: email, account, reason: '建立租戶初始登入帳號' });
+
     saveDb(db);
-    return ok(args.CID, '已建立');
+    return ok({ CID: args.CID, CAccount: account, CPassword: password, CToEmail: email, CLoginUrl: args.CLoginUrl || '' }, '已建立');
   }
 
   function updateTenant(args) {
@@ -668,28 +750,6 @@ const MockData = (function () {
     return ok(true, '已更新狀態');
   }
 
-  // CIsGrant 傳 null 代表移除覆寫，改回跟隨方案預設
-  function setTenantModuleOverride(args) {
-    const db = loadDb();
-    const t = db.tenants.find((x) => x.CID === args.CID);
-    if (!t) return fail('找不到租戶');
-    if (args.CIsGrant === null) {
-      t.ModuleOverrides = t.ModuleOverrides.filter((m) => m.CModuleCode !== args.CModuleCode);
-      t.CUpdatedAt = new Date().toISOString();
-      saveDb(db);
-      return ok(true, '已移除覆寫，改用方案預設');
-    }
-    const existing = t.ModuleOverrides.find((m) => m.CModuleCode === args.CModuleCode);
-    if (existing) {
-      existing.CIsGrant = args.CIsGrant;
-    } else {
-      t.ModuleOverrides.push({ CModuleCode: args.CModuleCode, CIsGrant: args.CIsGrant });
-    }
-    t.CUpdatedAt = new Date().toISOString();
-    saveDb(db);
-    return ok(true, '已更新模組覆寫');
-  }
-
   // 新增備註：軌跡以陣列儲存，最新一筆插入最前面，供表單頁依時間倒序顯示
   function addTenantNote(args) {
     const db = loadDb();
@@ -705,6 +765,83 @@ const MockData = (function () {
     t.CUpdatedAt = new Date().toISOString();
     saveDb(db);
     return ok(t.Notes, '已新增備註');
+  }
+
+  // ---- 建商租戶端使用者（人員）----
+  function getTenantUsers(tenantId) {
+    const db = loadDb();
+    const list = db.tenantUsers
+      .filter((u) => u.CTenantId === tenantId)
+      .map((u) => ({ CId: u.CId, CAccount: u.CAccount, CDisplayName: u.CDisplayName, CTitle: u.CTitle || '', CEmail: u.CEmail || '', CIsPrimary: !!u.CIsPrimary }));
+    return ok(list);
+  }
+
+  // 由建商平台管理者自行新增其他人員，新帳號預設非主要聯絡人；建立成功後模擬發送登入資訊信件
+  function addTenantUser(args) {
+    const db = loadDb();
+    const tenantId = args.CTenantId;
+    if (!db.tenants.some((t) => t.CID === tenantId)) return fail('找不到租戶');
+    if (!args.CDisplayName || !args.CDisplayName.trim()) return fail('請輸入姓名');
+    if (!args.CEmail || !args.CEmail.trim()) return fail('請輸入 Email');
+    if (!args.CAccount || !args.CAccount.trim()) return fail('請輸入登入帳號');
+    const account = args.CAccount.trim();
+    if (db.tenantUsers.some((u) => u.CTenantId === tenantId && u.CAccount === account)) {
+      return fail('此帳號已存在，請改用其他帳號');
+    }
+    const email = args.CEmail.trim();
+    const password = generatePassword();
+    const record = {
+      CId: db.nextTenantUserId++,
+      CTenantId: tenantId,
+      CAccount: account,
+      CPassword: password,
+      CDisplayName: args.CDisplayName.trim(),
+      CTitle: (args.CTitle || '').trim(),
+      CEmail: email,
+      CIsPrimary: false
+    };
+    db.tenantUsers.push(record);
+    recordSentEmail(db, { tenantId, toEmail: email, account, reason: '新增人員登入帳號' });
+    saveDb(db);
+    return ok({ CId: record.CId, CAccount: account, CPassword: password, CToEmail: email, CLoginUrl: args.CLoginUrl || '' }, '已建立人員帳號');
+  }
+
+  // 建商平台管理者為既有人員重設密碼（已登入狀態下操作，無需再驗證 Email）
+  function bizResetTenantUserPassword(args) {
+    const db = loadDb();
+    const user = db.tenantUsers.find((u) => u.CTenantId === args.CTenantId && u.CId === Number(args.CId));
+    if (!user) return fail('找不到人員資料');
+    const password = generatePassword();
+    user.CPassword = password;
+    recordSentEmail(db, { tenantId: args.CTenantId, toEmail: user.CEmail, account: user.CAccount, reason: '管理者重新設定密碼' });
+    saveDb(db);
+    return ok({ CAccount: user.CAccount, CPassword: password, CToEmail: user.CEmail, CLoginUrl: args.CLoginUrl || '' }, '已重新設定密碼');
+  }
+
+  // 忘記密碼自助重設：統編解析租戶（比照登入流程）→ 帳號＋登記 Email 需同時吻合才能重設，
+  // 避免僅知道帳號就能重設別人的密碼
+  function resetTenantUserPassword(args) {
+    const db = loadDb();
+    const tenant = db.tenants.find((t) => t.CTaxId && t.CTaxId === (args.taxId || '').trim());
+    if (!tenant) return fail('統一編號查無建商租戶資料');
+    if (tenant.CStatus !== 1) return fail('此租戶帳號已停用，請聯繫平台客服');
+    const account = (args.account || '').trim();
+    const email = (args.email || '').trim();
+    const user = db.tenantUsers.find((u) => u.CTenantId === tenant.CID && u.CAccount === account);
+    if (!user || !user.CEmail || user.CEmail.toLowerCase() !== email.toLowerCase()) {
+      return fail('帳號或 Email 不正確，請確認後再試');
+    }
+    const password = generatePassword();
+    user.CPassword = password;
+    recordSentEmail(db, { tenantId: tenant.CID, toEmail: user.CEmail, account: user.CAccount, reason: '忘記密碼重新設定' });
+    saveDb(db);
+    return ok({ CAccount: user.CAccount, CPassword: password, CToEmail: user.CEmail, CLoginUrl: args.CLoginUrl || '' }, '已重新設定密碼');
+  }
+
+  // 帳號資訊信件發送記錄查詢，供大平台端租戶詳細頁與建商平台人員管理頁共用查核
+  function getSentEmailLog(tenantId) {
+    const db = loadDb();
+    return ok((db.sentEmails || []).filter((e) => e.CTenantId === tenantId));
   }
 
   // ---- 程式版本管理 ----
@@ -788,9 +925,66 @@ const MockData = (function () {
     return ok(true, '已儲存');
   }
 
-  // ---- 承辦人（大平台端）名單 ----
+  // ---- 大平台端管理者帳號 ----
+  // 通知管理／留言工單承辦人下拉選單的姓名來源，直接衍生自管理者帳號清單，新增管理者後即同步出現在承辦人選項
   function getAdminUserList() {
-    return ok(DEFAULT_ADMIN_USERS.slice());
+    const db = loadDb();
+    return ok(db.adminAccounts.map((a) => a.CDisplayName));
+  }
+
+  function getAdminAccountList() {
+    const db = loadDb();
+    return ok(db.adminAccounts.map((a) => ({ CId: a.CId, CAccount: a.CAccount, CDisplayName: a.CDisplayName })));
+  }
+
+  // 大平台登入驗證：帳號密碼需同時吻合管理者帳號清單中的一筆紀錄
+  function verifyAdminLogin(args) {
+    const db = loadDb();
+    const account = (args.account || '').trim();
+    const acc = db.adminAccounts.find((a) => a.CAccount === account);
+    if (!acc || acc.CPassword !== args.password) return fail('帳號或密碼錯誤');
+    return ok({ CDisplayName: acc.CDisplayName });
+  }
+
+  function createAdminAccount(args) {
+    const db = loadDb();
+    if (!args.CDisplayName || !args.CDisplayName.trim()) return fail('請輸入姓名');
+    if (!args.CAccount || !args.CAccount.trim()) return fail('請輸入帳號');
+    if (!args.CPassword || !args.CPassword.trim()) return fail('請輸入密碼');
+    const account = args.CAccount.trim();
+    if (db.adminAccounts.some((a) => a.CAccount === account)) return fail('此帳號已存在，請改用其他帳號');
+    const record = {
+      CId: db.nextAdminAccountId++,
+      CAccount: account,
+      CPassword: args.CPassword,
+      CDisplayName: args.CDisplayName.trim()
+    };
+    db.adminAccounts.push(record);
+    saveDb(db);
+    return ok({ CId: record.CId }, '已建立管理者帳號');
+  }
+
+  // 管理者為其他管理者重設密碼：直接產生新密碼並回傳一次性顯示，供畫面提示後手動告知本人
+  function resetAdminAccountPassword(args) {
+    const db = loadDb();
+    const acc = db.adminAccounts.find((a) => a.CId === Number(args.CId));
+    if (!acc) return fail('找不到管理者帳號');
+    const password = generatePassword();
+    acc.CPassword = password;
+    saveDb(db);
+    return ok({ CAccount: acc.CAccount, CPassword: password }, '已重新設定密碼');
+  }
+
+  // 管理者本人變更密碼：需先核對目前密碼才能設定新密碼（區別於 resetAdminAccountPassword 由他人代為重設）
+  function changeAdminPassword(args) {
+    const db = loadDb();
+    const acc = db.adminAccounts.find((a) => a.CAccount === args.account);
+    if (!acc) return fail('找不到管理者帳號');
+    if (!args.currentPassword || acc.CPassword !== args.currentPassword) return fail('目前密碼不正確');
+    if (!args.newPassword || !args.newPassword.trim()) return fail('請輸入新密碼');
+    acc.CPassword = args.newPassword;
+    saveDb(db);
+    return ok(true, '已變更密碼');
   }
 
   // ---- 通知公告 ----
@@ -994,13 +1188,22 @@ const MockData = (function () {
     createTenant,
     updateTenant,
     setTenantStatus,
-    setTenantModuleOverride,
     addTenantNote,
+    getTenantUsers,
+    addTenantUser,
+    bizResetTenantUserPassword,
+    resetTenantUserPassword,
+    getSentEmailLog,
     getVersionList,
     getVersionData,
     createVersionRecord,
     updateVersionRecord,
     getAdminUserList,
+    getAdminAccountList,
+    verifyAdminLogin,
+    createAdminAccount,
+    resetAdminAccountPassword,
+    changeAdminPassword,
     getNotificationList,
     getNotificationData,
     saveNotification,

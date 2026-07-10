@@ -24,9 +24,21 @@
   const contractEndInput = document.getElementById('contractEnd');
   const buildCaseMaxInput = document.getElementById('buildCaseMax');
   const planSelect = document.getElementById('plan');
+  const contactSetupSection = document.getElementById('contact-setup-section');
+  const contactNameInput = document.getElementById('contactName');
+  const contactTitleInput = document.getElementById('contactTitle');
+  const contactEmailInput = document.getElementById('contactEmail');
+  const loginAccountInput = document.getElementById('loginAccount');
   const formError = document.getElementById('form-error');
   const formSuccess = document.getElementById('form-success');
   const submitBtn = document.getElementById('submit-btn');
+  const gotoDetailLink = document.getElementById('goto-detail-link');
+
+  const emailPreviewCard = document.getElementById('email-preview-card');
+  const emailPreviewTo = document.getElementById('email-preview-to');
+  const emailPreviewUrl = document.getElementById('email-preview-url');
+  const emailPreviewAccount = document.getElementById('email-preview-account');
+  const emailPreviewPassword = document.getElementById('email-preview-password');
 
   const statusCard = document.getElementById('status-card');
   const statusText = document.getElementById('status-text');
@@ -38,6 +50,9 @@
   const versionHistoryLink = document.getElementById('version-history-link');
 
   const modulesCard = document.getElementById('modules-card');
+  const modulesCardToggle = document.getElementById('modules-card-toggle');
+  const modulesCardCaret = document.getElementById('modules-card-caret');
+  const modulesTable = document.getElementById('modules-table');
   const modulesTableBody = document.getElementById('modules-table-body');
 
   const notesCard = document.getElementById('notes-card');
@@ -48,7 +63,6 @@
   const notesEmptyHint = document.getElementById('notes-empty-hint');
 
   let currentStatus = 1;
-  let moduleOverrides = [];
   let featureModuleTiers = [];
   let planModuleCodes = [];
   let tenantNotes = [];
@@ -61,10 +75,19 @@
     pageTitle.textContent = '新增建商';
   } else {
     cidInput.disabled = true;
+    contactSetupSection.hidden = true;
     statusCard.hidden = false;
     modulesCard.hidden = false;
     notesCard.hidden = false;
   }
+
+  let modulesCollapsed = false;
+  modulesCardToggle.addEventListener('click', function () {
+    modulesCollapsed = !modulesCollapsed;
+    modulesTable.hidden = modulesCollapsed;
+    modulesCardCaret.classList.toggle('fa-caret-down', !modulesCollapsed);
+    modulesCardCaret.classList.toggle('fa-caret-right', modulesCollapsed);
+  });
 
   // 合作方案下拉選單
   const planListRes = MockData.getPlanList();
@@ -103,13 +126,20 @@
     buildCaseMaxInput.value = d.CBuildCaseMax;
     planSelect.value = d.CPlanVersionId || '';
     currentStatus = d.CStatus ?? 1;
-    moduleOverrides = d.ModuleOverrides || [];
     tenantNotes = d.Notes || [];
     loadPlanModules(d.CPlanVersionId);
     renderStatus();
     renderModules();
     renderNotes();
     renderSystemInfo(d);
+  }
+
+  function showEmailPreview(info) {
+    emailPreviewCard.hidden = false;
+    emailPreviewTo.textContent = info.CToEmail;
+    emailPreviewUrl.textContent = info.CLoginUrl;
+    emailPreviewAccount.textContent = info.CAccount;
+    emailPreviewPassword.textContent = info.CPassword;
   }
 
   // 目前版本／上次更新時間來自版本管理模組與租戶紀錄的異動時間，每次任何異動成功後都要重新讀取以維持同步
@@ -150,34 +180,7 @@
     return planModuleCodes.includes(code);
   }
 
-  // 覆寫存在時以覆寫為準，否則沿用方案預設
-  function effectiveGrant(code) {
-    const override = moduleOverrides.find((m) => m.CModuleCode === code);
-    return override ? override.CIsGrant : isPlanDefault(code);
-  }
-
-  // 套用單一模組的覆寫結果（成功回傳 true），失敗時顯示錯誤並回傳 false
-  function applyModuleOverride(code, grantValue) {
-    const res = MockData.setTenantModuleOverride({ CID: cidInput.value, CModuleCode: code, CIsGrant: grantValue });
-    if (res.StatusCode !== MockData.EnumStatusCode.Success) {
-      formError.hidden = false;
-      formError.textContent = '更新模組覆寫失敗';
-      return false;
-    }
-    if (grantValue === null) {
-      moduleOverrides = moduleOverrides.filter((m) => m.CModuleCode !== code);
-    } else {
-      const existing = moduleOverrides.find((m) => m.CModuleCode === code);
-      if (existing) {
-        existing.CIsGrant = grantValue;
-      } else {
-        moduleOverrides.push({ CModuleCode: code, CIsGrant: grantValue });
-      }
-    }
-    refreshSystemInfo();
-    return true;
-  }
-
+  // 可用功能模組完全依目前所選合作方案版本帶入，唯讀顯示；如需調整模組內容請至「合作方案」管理該方案版本
   function renderModules() {
     modulesTableBody.innerHTML = featureModuleTiers
       .map((tier) => {
@@ -186,50 +189,30 @@
           const catCollapsed = collapsedCategories.has(cat.CCategory);
           const moduleRows = cat.Modules.map((m) => {
             const inPlan = isPlanDefault(m.CModuleCode);
-            const effective = effectiveGrant(m.CModuleCode);
-            const overridden = effective !== inPlan;
             return `
               <tr>
                 <td class="module-name">${escapeHtml(m.CModuleName)}</td>
                 <td>${escapeHtml(m.CDescription)}</td>
                 <td><span class="pill ${MockData.devStatusPillClass(m.CDevStatus)}" title="${escapeHtml(m.CDevNote)}">${escapeHtml(m.CDevStatus)}</span></td>
                 <td><span class="pill ${inPlan ? 'good' : 'neutral'}">${inPlan ? '含' : '不含'}</span></td>
-                <td>
-                  <input type="checkbox" data-module-code="${escapeHtml(m.CModuleCode)}" ${effective ? 'checked' : ''} />
-                  ${overridden ? `<span class="hint-inline">（已覆寫${effective ? '開啟' : '關閉'}）</span>` : ''}
-                </td>
               </tr>
             `;
           }).join('');
           return `
             <tr class="category-row" data-category="${escapeHtml(cat.CCategory)}">
-              <td colspan="5"><i class="fa-solid ${catCollapsed ? 'fa-caret-right' : 'fa-caret-down'}"></i>${escapeHtml(cat.CCategory)}</td>
+              <td colspan="4"><i class="fa-solid ${catCollapsed ? 'fa-caret-right' : 'fa-caret-down'}"></i>${escapeHtml(cat.CCategory)}</td>
             </tr>
             ${catCollapsed ? '' : moduleRows}
           `;
         }).join('');
         return `
           <tr class="tier-row" data-tier="${escapeHtml(tier.CTier)}">
-            <td colspan="5"><i class="fa-solid ${tierCollapsed ? 'fa-caret-right' : 'fa-caret-down'}"></i>${escapeHtml(tier.CTier)}</td>
+            <td colspan="4"><i class="fa-solid ${tierCollapsed ? 'fa-caret-right' : 'fa-caret-down'}"></i>${escapeHtml(tier.CTier)}</td>
           </tr>
           ${tierCollapsed ? '' : categoryRows}
         `;
       })
       .join('');
-
-    modulesTableBody.querySelectorAll('input[data-module-code]').forEach((checkbox) => {
-      checkbox.addEventListener('change', function () {
-        const code = checkbox.dataset.moduleCode;
-        const newValue = checkbox.checked;
-        // 勾選結果若跟方案預設相同，代表不需要覆寫，直接把覆寫清掉即可
-        const grantValue = newValue === isPlanDefault(code) ? null : newValue;
-        if (applyModuleOverride(code, grantValue)) {
-          renderModules();
-        } else {
-          checkbox.checked = !checkbox.checked;
-        }
-      });
-    });
 
     // 點分類列／基本功能・擴充功能列＝收合或展開該層底下的項目
     modulesTableBody.querySelectorAll('.category-row').forEach((row) => {
@@ -287,14 +270,32 @@
       CPlanVersionId: planSelect.value ? Number(planSelect.value) : null
     };
 
+    if (isNew) {
+      model.CContactName = contactNameInput.value;
+      model.CContactTitle = contactTitleInput.value;
+      model.CContactEmail = contactEmailInput.value;
+      model.CLoginAccount = loginAccountInput.value;
+      // 登入網址於建立當下計算：tenant-form.html 位於 pages/ 底下，相對根目錄的 biz-login.html 一層即可
+      model.CLoginUrl = new URL('../biz-login.html', window.location.href).href;
+    }
+
     submitBtn.disabled = true;
 
     if (isNew) {
       const res = MockData.createTenant(model);
-      submitBtn.disabled = false;
       if (res.StatusCode === MockData.EnumStatusCode.Success) {
-        location.href = `tenant-form.html?id=${encodeURIComponent(res.Entries)}`;
+        const info = res.Entries;
+        cidInput.disabled = true;
+        contactSetupSection.querySelectorAll('input').forEach((el) => { el.disabled = true; });
+        submitBtn.disabled = true;
+        submitBtn.textContent = '已建立';
+        formSuccess.hidden = false;
+        formSuccess.textContent = `已建立租戶「${model.CName}」，登入資訊已模擬發送至 ${info.CToEmail}`;
+        gotoDetailLink.hidden = false;
+        gotoDetailLink.href = `tenant-form.html?id=${encodeURIComponent(info.CID)}`;
+        showEmailPreview(info);
       } else {
+        submitBtn.disabled = false;
         formError.hidden = false;
         formError.textContent = res.Message || '建立失敗';
       }

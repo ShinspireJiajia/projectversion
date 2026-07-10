@@ -1,4 +1,4 @@
-/* page-tenant-list.js：建商租戶列表頁互動邏輯 */
+/* page-tenant-list.js：建商租戶列表頁互動邏輯（篩選建商名稱／統編／狀態，並分頁顯示） */
 
 (function () {
   if (!AuthService.requireLogin(window, '../login.html')) {
@@ -10,10 +10,26 @@
     window.parent.postMessage({ type: 'pt-page-loaded', group: 'tenants' }, '*');
   }
 
+  const PAGE_SIZE = 10;
+
   const loadingMessage = document.getElementById('loading-message');
   const errorMessage = document.getElementById('error-message');
   const table = document.getElementById('tenant-table');
   const tableBody = document.getElementById('tenant-table-body');
+  const emptyHint = document.getElementById('empty-hint');
+
+  const nameFilter = document.getElementById('name-filter');
+  const taxIdFilter = document.getElementById('taxid-filter');
+  const statusFilter = document.getElementById('status-filter');
+  const resetFilterBtn = document.getElementById('reset-filter-btn');
+
+  const paginationRow = document.getElementById('pagination-row');
+  const paginationInfo = document.getElementById('pagination-info');
+  const prevPageBtn = document.getElementById('prev-page-btn');
+  const nextPageBtn = document.getElementById('next-page-btn');
+
+  let currentPage = 1;
+  let debounceTimer = null;
 
   function statusLabel(status) {
     switch (status) {
@@ -39,12 +55,12 @@
     return days >= 0 && days <= 30;
   }
 
-  function render(tenants) {
-    if (!tenants.length) {
-      tableBody.innerHTML = '<tr><td colspan="7">目前沒有租戶資料</td></tr>';
-      return;
-    }
+  function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  }
 
+  function render(tenants) {
     tableBody.innerHTML = tenants
       .map((t) => {
         const expiringBadge = isExpiringSoon(t.CAccountExpireDT) ? '<span class="pill critical">即將到期</span>' : '';
@@ -65,18 +81,75 @@
       .join('');
   }
 
-  function escapeHtml(value) {
-    if (value === null || value === undefined) return '';
-    return String(value).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  function renderPagination(totalItems) {
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    paginationRow.hidden = totalItems === 0;
+    paginationInfo.textContent = `第 ${currentPage} / ${totalPages} 頁（共 ${totalItems} 筆）`;
+    prevPageBtn.disabled = currentPage <= 1;
+    nextPageBtn.disabled = currentPage >= totalPages;
   }
 
-  const res = MockData.getTenantList();
-  loadingMessage.hidden = true;
-  if (res.StatusCode === MockData.EnumStatusCode.Success) {
+  function loadAndRender() {
+    const res = MockData.getTenantList({
+      name: nameFilter.value,
+      taxId: taxIdFilter.value,
+      status: statusFilter.value,
+      page: currentPage,
+      pageSize: PAGE_SIZE
+    });
+    loadingMessage.hidden = true;
+    if (res.StatusCode !== MockData.EnumStatusCode.Success) {
+      errorMessage.hidden = false;
+      errorMessage.textContent = '讀取租戶清單失敗';
+      return;
+    }
+    const entries = res.Entries || [];
+    if (res.TotalItems === 0) {
+      table.hidden = true;
+      emptyHint.hidden = false;
+      paginationRow.hidden = true;
+      return;
+    }
     table.hidden = false;
-    render(res.Entries || []);
-  } else {
-    errorMessage.hidden = false;
-    errorMessage.textContent = '讀取租戶清單失敗';
+    emptyHint.hidden = true;
+    render(entries);
+    renderPagination(res.TotalItems);
   }
+
+  function onFilterChange() {
+    currentPage = 1;
+    loadAndRender();
+  }
+
+  // 文字篩選欄位加上簡單防抖，避免每敲一個字就重新查詢
+  function onFilterInput() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(onFilterChange, 250);
+  }
+
+  nameFilter.addEventListener('input', onFilterInput);
+  taxIdFilter.addEventListener('input', onFilterInput);
+  statusFilter.addEventListener('change', onFilterChange);
+
+  resetFilterBtn.addEventListener('click', function () {
+    nameFilter.value = '';
+    taxIdFilter.value = '';
+    statusFilter.value = '';
+    onFilterChange();
+  });
+
+  prevPageBtn.addEventListener('click', function () {
+    if (currentPage > 1) {
+      currentPage -= 1;
+      loadAndRender();
+    }
+  });
+
+  nextPageBtn.addEventListener('click', function () {
+    currentPage += 1;
+    loadAndRender();
+  });
+
+  loadAndRender();
 })();
