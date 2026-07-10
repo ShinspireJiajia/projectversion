@@ -1,0 +1,13 @@
+/* page-biz-ticket-form.css：建商租戶服務入口「新增留言」樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}

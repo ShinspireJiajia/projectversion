@@ -1,0 +1,124 @@
+/* page-tenant-form.css：建商租戶新增／編輯頁樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.card + .card {
+  margin-top: 20px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+.success-text {
+  color: var(--good);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.system-info-row {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.system-info-row p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.btn + .btn {
+  margin-left: 8px;
+}
+
+#notes-card .field {
+  margin-bottom: 10px;
+}
+
+#notes-card table {
+  margin-top: 16px;
+}
+
+.note-col-time {
+  width: 150px;
+  white-space: nowrap;
+}
+
+.note-col-user {
+  width: 110px;
+}
+
+.note-content-cell {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#contact-setup-section {
+  margin: 4px 0 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+
+#contact-setup-section .hint {
+  margin: 0 0 14px;
+}
+
+.email-preview {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.email-preview dt {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.email-preview dd {
+  margin: 0;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.card-head-collapsible {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.card-head-collapsible h2 {
+  margin: 0;
+}
+
+.card-head-collapsible i {
+  color: var(--ink-soft);
+}

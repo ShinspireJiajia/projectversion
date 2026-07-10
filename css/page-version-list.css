@@ -1,0 +1,47 @@
+/* page-version-list.css：版本管理列表頁樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.filter-row {
+  max-width: 280px;
+  margin-bottom: 20px;
+}
+
+.filter-row .field {
+  margin-bottom: 0;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.version-no-cell {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+td.summary-cell {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.branch-cell {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.actions-cell {
+  white-space: nowrap;
+}

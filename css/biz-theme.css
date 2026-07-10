@@ -1,0 +1,8 @@
+/* biz-theme.css：建商租戶服務入口配色覆寫
+   沿用 style-base.css 既有的變數命名（--accent／--accent-soft），改為建商端主色，
+   讓「建商自己看到的畫面」與「新合達平台端管理後台」在視覺上一眼可分辨。
+   每個 biz-*.html／pages/biz-*.html 頁面都在 style-base.css 之後、頁面專屬 css 之前引入這份檔案。 */
+:root {
+  --accent: #8a5a2b;
+  --accent-soft: #f4ebe0;
+}

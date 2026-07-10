@@ -1,0 +1,48 @@
+/* page-version-form.css：版本紀錄新增／編輯頁樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.success-text {
+  color: var(--good);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.tenant-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px 12px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.tenant-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.tenant-checkbox-item input {
+  margin: 0;
+}

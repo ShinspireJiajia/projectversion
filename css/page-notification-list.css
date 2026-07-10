@@ -1,0 +1,52 @@
+/* page-notification-list.css：通知公告列表頁樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+
+.field-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-inline label {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.field-inline select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 14px;
+  font-family: inherit;
+  min-width: 160px;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background: var(--accent-soft);
+}
+
+.actions-cell {
+  white-space: nowrap;
+}

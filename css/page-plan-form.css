@@ -1,0 +1,28 @@
+/* page-plan-form.css：合作方案新增／編輯頁樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.revision-note {
+  background: #f5ecda;
+  border-left: 3px solid #8f6114;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+
+.success-text {
+  color: var(--good);
+  font-size: 13px;
+  margin-top: 8px;
+}

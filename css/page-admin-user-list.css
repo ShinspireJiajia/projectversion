@@ -1,0 +1,23 @@
+/* page-admin-user-list.css：管理者人員列表頁樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.lede {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin: -8px 0 16px;
+}
+
+.reset-result {
+  margin-top: 16px;
+}

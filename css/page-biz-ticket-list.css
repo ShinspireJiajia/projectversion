@@ -1,0 +1,62 @@
+/* page-biz-ticket-list.css：建商租戶服務入口「留言板」列表樣式 */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.page-head h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.lede {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+
+.empty-text {
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background: var(--accent-soft);
+}
+
+.subject-cell {
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+/* 工單狀態四種色階：受理中／處理中／已回覆／結案（與大平台端一致，方便對照） */
+.pill.status-open {
+  background: #eaf1fb;
+  color: #2a5b9c;
+}
+
+.pill.status-inProgress {
+  background: #fdf1de;
+  color: #8a5a12;
+}
+
+.pill.status-resolved {
+  background: #e4efe9;
+  color: var(--good);
+}
+
+.pill.status-closed {
+  background: #ecebe6;
+  color: var(--ink-soft);
+}

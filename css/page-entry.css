@@ -1,0 +1,36 @@
+/* page-entry.css：入口選擇頁樣式（新合達管理後台／建商租戶服務入口） */
+
+.entry-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.entry-card {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 6px;
+}
+
+.entry-card h1 {
+  font-size: 18px;
+  margin: 0 0 22px;
+}
+
+.entry-btn {
+  width: 100%;
+  text-align: center;
+}
+
+.entry-btn + .entry-btn {
+  margin-top: 10px;
+}
