@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>新增管理者帳號｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-admin-user-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>新增管理者帳號</h1>
+    <a class="btn secondary" href="admin-user-list.html">返回列表</a>
+  </div>
+
+  <div class="card">
+    <form id="admin-user-form">
+      <div class="field">
+        <label for="displayName">姓名</label>
+        <input id="displayName" name="displayName" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="account">登入帳號</label>
+        <input id="account" name="account" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="password">登入密碼</label>
+        <input id="password" name="password" type="password" required minlength="4" />
+        <span class="hint">建立後請自行告知該管理者此密碼，登入後可於「管理者人員」列表重設密碼。</span>
+      </div>
+
+      <p class="error-text" id="form-error" hidden></p>
+      <p class="success-text" id="form-success" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">建立</button>
+      <a class="btn secondary" id="goto-list-link" href="admin-user-list.html" hidden>返回管理者清單</a>
+    </form>
+  </div>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-admin-user-form.js"></script>
+</body>
+</html>

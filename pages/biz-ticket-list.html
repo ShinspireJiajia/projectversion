@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>留言板｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-ticket-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>留言板</h1>
+    <a class="btn" href="biz-ticket-form.html"><i class="fa-solid fa-pen"></i> 新增留言</a>
+  </div>
+  <p class="lede">有任何問題都可以在這裡留言給平台客服，客服回覆後會顯示在對話串中。</p>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="ticket-table" hidden>
+    <thead>
+      <tr>
+        <th>主旨</th>
+        <th>狀態</th>
+        <th>承辦人</th>
+        <th>最後更新時間</th>
+      </tr>
+    </thead>
+    <tbody id="ticket-table-body"></tbody>
+  </table>
+  <p class="empty-text" id="empty-text" hidden>目前沒有留言紀錄</p>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-ticket-list.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>版本紀錄編輯｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-version-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1 id="page-title">新增版本紀錄</h1>
+    <a class="btn secondary" href="version-list.html">返回列表</a>
+  </div>
+
+  <div class="card">
+    <form id="version-form">
+      <div class="field">
+        <label for="versionNo">版本號</label>
+        <input id="versionNo" name="versionNo" type="text" placeholder="例如 4.2.0" required />
+      </div>
+
+      <div class="field">
+        <label for="releaseDate">生效日期</label>
+        <input id="releaseDate" name="releaseDate" type="date" required />
+      </div>
+
+      <div class="field">
+        <label for="summary">異動內容說明</label>
+        <textarea id="summary" name="summary" rows="4" placeholder="這個版本更新／客製了什麼內容，方便日後回溯" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="sourceBranch">來源分支／PR（選填）</label>
+        <input id="sourceBranch" name="sourceBranch" type="text" placeholder="例如 feature/lufu-site-management-custom" />
+      </div>
+
+      <div class="field">
+        <label>適用租戶（此版本已套用／推送到的租戶，可複選）</label>
+        <div id="tenant-checkbox-list" class="tenant-checkbox-list"></div>
+      </div>
+
+      <p class="hint" id="meta-hint" hidden></p>
+      <p class="error-text" id="form-error" hidden></p>
+      <p class="success-text" id="form-success" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">建立</button>
+    </form>
+  </div>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-version-form.js"></script>
+</body>
+</html>

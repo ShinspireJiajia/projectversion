@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>版本管理｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-version-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>版本管理</h1>
+    <a class="btn" href="version-form.html"><i class="fa-solid fa-plus"></i> 新增版本紀錄</a>
+  </div>
+
+  <div class="filter-row">
+    <div class="field">
+      <label for="tenant-filter">篩選租戶</label>
+      <select id="tenant-filter">
+        <option value="">全部租戶</option>
+      </select>
+    </div>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="version-table" hidden>
+    <thead>
+      <tr>
+        <th>版本號</th>
+        <th>生效日期</th>
+        <th>適用租戶</th>
+        <th>異動內容</th>
+        <th>來源分支／PR</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="version-table-body"></tbody>
+  </table>
+  <p class="hint" id="empty-hint" hidden>目前沒有符合條件的版本紀錄。</p>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-version-list.js"></script>
+</body>
+</html>

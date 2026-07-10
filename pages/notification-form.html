@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>通知編輯｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-notification-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1 id="page-title">新增通知</h1>
+    <a class="btn secondary" href="notification-list.html">返回列表</a>
+  </div>
+
+  <div class="card">
+    <form id="notification-form">
+      <div class="field">
+        <label for="title">標題</label>
+        <input id="title" name="title" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="category">分類</label>
+        <select id="category" name="category">
+          <option value="系統公告">系統公告</option>
+          <option value="功能更新">功能更新</option>
+          <option value="維護通知">維護通知</option>
+          <option value="合約提醒">合約提醒</option>
+          <option value="行銷推廣">行銷推廣</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="content">內文</label>
+        <textarea id="content" name="content" rows="10" placeholder="輸入通知內容"></textarea>
+      </div>
+
+      <div class="field">
+        <label>範圍</label>
+        <div class="radio-group">
+          <label><input type="radio" name="scopeType" value="all" id="scope-all" checked /> 全體廣播</label>
+          <label><input type="radio" name="scopeType" value="targeted" id="scope-targeted" /> 指定租戶</label>
+        </div>
+      </div>
+
+      <div class="field" id="target-tenants-field" hidden>
+        <label for="target-tenants">指定租戶（可複選，按住 Ctrl／Cmd 可多選）</label>
+        <select id="target-tenants" multiple size="5"></select>
+      </div>
+
+      <div class="field">
+        <label class="checkbox-label"><input type="checkbox" id="is-public" /> 公開於建商首頁</label>
+      </div>
+
+      <div class="field">
+        <label>發布時間</label>
+        <div class="radio-group">
+          <label><input type="radio" name="publishTiming" value="now" id="publish-now" checked /> 立即發布</label>
+          <label><input type="radio" name="publishTiming" value="scheduled" id="publish-scheduled" /> 排程發布</label>
+        </div>
+      </div>
+
+      <div class="field" id="publish-at-field" hidden>
+        <label for="publish-at">排程發布時間</label>
+        <input id="publish-at" name="publishAt" type="datetime-local" />
+      </div>
+
+      <div class="field">
+        <label for="expire-at">下架時間（選填）</label>
+        <input id="expire-at" name="expireAt" type="datetime-local" />
+      </div>
+
+      <p class="error-text" id="form-error" hidden></p>
+      <p class="success-text" id="form-success" hidden></p>
+
+      <button class="btn secondary" type="button" id="save-draft-btn">儲存草稿</button>
+      <button class="btn" type="button" id="publish-btn">發布</button>
+    </form>
+  </div>
+
+  <!-- 原型用途：CDN 載入失敗時 initEditor() 會偵測不到 window.tinymce，自動回退為純 textarea，不阻塞操作流程 -->
+  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-notification-form.js"></script>
+</body>
+</html>

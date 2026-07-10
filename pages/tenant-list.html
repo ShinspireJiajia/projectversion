@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>建商租戶｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-tenant-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>建商租戶</h1>
+    <a class="btn" href="tenant-form.html"><i class="fa-solid fa-plus"></i> 新增建商</a>
+  </div>
+
+  <div class="filter-row">
+    <div class="field">
+      <label for="name-filter">建商名稱</label>
+      <input id="name-filter" type="text" placeholder="輸入建商名稱或代碼" />
+    </div>
+    <div class="field">
+      <label for="taxid-filter">統一編號</label>
+      <input id="taxid-filter" type="text" placeholder="輸入統一編號" />
+    </div>
+    <div class="field">
+      <label for="status-filter">狀態</label>
+      <select id="status-filter">
+        <option value="">全部狀態</option>
+        <option value="1">啟用中</option>
+        <option value="0">停用</option>
+        <option value="9">已終止</option>
+      </select>
+    </div>
+    <button class="btn secondary" type="button" id="reset-filter-btn">清除篩選</button>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="tenant-table" hidden>
+    <thead>
+      <tr>
+        <th>代碼</th>
+        <th>建商名稱</th>
+        <th>統編</th>
+        <th>方案</th>
+        <th>合約結束日</th>
+        <th>狀態</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="tenant-table-body"></tbody>
+  </table>
+  <p class="hint" id="empty-hint" hidden>目前沒有符合條件的租戶資料。</p>
+
+  <div class="pagination-row" id="pagination-row" hidden>
+    <button class="btn secondary" type="button" id="prev-page-btn">上一頁</button>
+    <span id="pagination-info"></span>
+    <button class="btn secondary" type="button" id="next-page-btn">下一頁</button>
+  </div>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-tenant-list.js"></script>
+</body>
+</html>

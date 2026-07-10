@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>留言工單｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-ticket-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>留言工單</h1>
+  </div>
+
+  <div class="filter-bar">
+    <div class="field-inline">
+      <label for="status-filter">狀態</label>
+      <select id="status-filter">
+        <option value="">全部</option>
+        <option value="open">受理中</option>
+        <option value="inProgress">處理中</option>
+        <option value="resolved">已回覆</option>
+        <option value="closed">結案</option>
+      </select>
+    </div>
+    <div class="field-inline">
+      <label for="tenant-filter">租戶</label>
+      <select id="tenant-filter">
+        <option value="">全部</option>
+      </select>
+    </div>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="ticket-table" hidden>
+    <thead>
+      <tr>
+        <th>租戶</th>
+        <th>主旨／來源通知</th>
+        <th>狀態</th>
+        <th>承辦人</th>
+        <th>最後更新時間</th>
+      </tr>
+    </thead>
+    <tbody id="ticket-table-body"></tbody>
+  </table>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-ticket-list.js"></script>
+</body>
+</html>

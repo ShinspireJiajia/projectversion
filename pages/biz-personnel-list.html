@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>人員管理｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-personnel-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>人員管理</h1>
+    <a class="btn" href="biz-personnel-form.html"><i class="fa-solid fa-plus"></i> 新增人員</a>
+  </div>
+  <p class="lede">貴公司在建商平台的所有登入人員都列在這裡。新增人員後，系統會將登入網址、帳號、密碼寄送至該人員的 Email。</p>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="personnel-table" hidden>
+    <thead>
+      <tr>
+        <th>姓名</th>
+        <th>職稱</th>
+        <th>Email</th>
+        <th>帳號</th>
+        <th>身份</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="personnel-table-body"></tbody>
+  </table>
+
+  <p class="reset-result" id="reset-result" hidden></p>
+
+  <div class="card" id="email-log-card">
+    <h2>帳號信件發送記錄</h2>
+    <table>
+      <thead>
+        <tr><th class="log-col-time">時間</th><th>收件 Email</th><th>帳號</th><th>事由</th></tr>
+      </thead>
+      <tbody id="email-log-table-body"></tbody>
+    </table>
+    <p class="hint" id="email-log-empty-hint">尚無發送記錄。</p>
+  </div>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-personnel-list.js"></script>
+</body>
+</html>

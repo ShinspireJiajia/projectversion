@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>通知公告｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-notification-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>通知公告</h1>
+    <a class="btn" href="notification-form.html"><i class="fa-solid fa-plus"></i> 新增通知</a>
+  </div>
+
+  <div class="filter-bar">
+    <div class="field-inline">
+      <label for="status-filter">發布狀態</label>
+      <select id="status-filter">
+        <option value="">全部</option>
+        <option value="draft">草稿</option>
+        <option value="published">已發布</option>
+        <option value="archived">已下架</option>
+      </select>
+    </div>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="notification-table" hidden>
+    <thead>
+      <tr>
+        <th>標題</th>
+        <th>分類</th>
+        <th>範圍</th>
+        <th>公開於首頁</th>
+        <th>發布狀態</th>
+        <th>發布時間</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="notification-table-body"></tbody>
+  </table>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-notification-list.js"></script>
+</body>
+</html>

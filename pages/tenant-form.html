@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>建商租戶編輯｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-tenant-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1 id="page-title">新增建商</h1>
+    <a class="btn secondary" href="tenant-list.html">返回列表</a>
+  </div>
+
+  <div class="card">
+    <form id="tenant-form">
+      <div class="field">
+        <label for="cid">租戶代碼（BUID，僅限英文字母、數字、底線、連字號）</label>
+        <input id="cid" name="cid" type="text" pattern="[A-Z0-9_-]+" placeholder="例如 LUFU、SMC" required />
+        <span class="error-text" id="cid-error" hidden>只能輸入英文字母（自動轉大寫）、數字、底線、連字號</span>
+      </div>
+
+      <div class="field">
+        <label for="name">建商名稱</label>
+        <input id="name" name="name" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="desc">說明</label>
+        <input id="desc" name="desc" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="taxId">統一編號</label>
+        <input id="taxId" name="taxId" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="contractStart">合約起始日</label>
+        <input id="contractStart" name="contractStart" type="date" />
+      </div>
+
+      <div class="field">
+        <label for="contractEnd">合約結束日</label>
+        <input id="contractEnd" name="contractEnd" type="date" required />
+      </div>
+
+      <div class="field">
+        <label for="buildCaseMax">建案數量上限（覆寫值，累計計算含已結案）</label>
+        <input id="buildCaseMax" name="buildCaseMax" type="number" required />
+      </div>
+
+      <div class="field">
+        <label for="plan">合作方案</label>
+        <select id="plan" name="plan">
+          <option value="">未指定</option>
+        </select>
+      </div>
+
+      <div id="contact-setup-section">
+        <h2 class="section-title">主要聯絡人與平台登入設定</h2>
+        <p class="hint">此聯絡人將成為建商平台的第一位使用者（平台管理者），建立成功後系統會將登入網址、帳號、密碼寄送至此 Email，之後可由該管理者登入建商平台自行新增其他人員。</p>
+
+        <div class="field">
+          <label for="contactName">主要聯絡人姓名</label>
+          <input id="contactName" name="contactName" type="text" required />
+        </div>
+
+        <div class="field">
+          <label for="contactTitle">職稱</label>
+          <input id="contactTitle" name="contactTitle" type="text" />
+        </div>
+
+        <div class="field">
+          <label for="contactEmail">Email</label>
+          <input id="contactEmail" name="contactEmail" type="email" required />
+        </div>
+
+        <div class="field">
+          <label for="loginAccount">登入帳號</label>
+          <input id="loginAccount" name="loginAccount" type="text" required />
+          <span class="hint">此帳號僅在本租戶內使用，登入建商平台時需搭配統一編號與密碼。</span>
+        </div>
+      </div>
+
+      <p class="error-text" id="form-error" hidden></p>
+      <p class="success-text" id="form-success" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">建立</button>
+      <a class="btn secondary" id="goto-detail-link" href="#" hidden>前往租戶詳細設定</a>
+    </form>
+  </div>
+
+  <div class="card" id="email-preview-card" hidden>
+    <h2>模擬寄送信件內容（原型展示用，正式環境僅寄送 Email，畫面不會顯示密碼）</h2>
+    <dl class="email-preview">
+      <dt>收件人</dt><dd id="email-preview-to"></dd>
+      <dt>登入網址</dt><dd id="email-preview-url"></dd>
+      <dt>帳號</dt><dd id="email-preview-account"></dd>
+      <dt>密碼</dt><dd id="email-preview-password"></dd>
+    </dl>
+  </div>
+
+  <div class="card" id="status-card" hidden>
+    <h2>租戶狀態</h2>
+    <p id="status-text">目前狀態：啟用中</p>
+    <button class="btn secondary" type="button" id="status-active-btn">啟用</button>
+    <button class="btn secondary" type="button" id="status-disabled-btn">停用</button>
+    <button class="btn danger" type="button" id="status-terminated-btn">標記已終止</button>
+    <p class="hint">標記已終止不會刪除任何資料，實際資料清除需另外手動操作（人工判斷，見產品規劃第 10 節）。</p>
+
+    <div class="system-info-row">
+      <p id="current-version-text">目前程式版本：－</p>
+      <p id="last-updated-text">上次更新時間：－</p>
+      <a class="btn secondary" id="version-history-link" href="#">查看版本歷程</a>
+    </div>
+  </div>
+
+  <div class="card" id="modules-card" hidden>
+    <div class="card-head-collapsible" id="modules-card-toggle">
+      <h2>可用功能模組</h2>
+      <i class="fa-solid fa-caret-down" id="modules-card-caret"></i>
+    </div>
+    <p class="hint">此清單依目前所選合作方案版本帶入，為唯讀顯示。如需調整模組內容，請至「合作方案」管理該方案版本。</p>
+    <table id="modules-table">
+      <thead>
+        <tr><th>模組</th><th>說明</th><th>開發狀況</th><th>此租戶可用</th></tr>
+      </thead>
+      <tbody id="modules-table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="card" id="notes-card" hidden>
+    <h2>備註</h2>
+    <div class="field">
+      <label for="note-content">新增備註</label>
+      <textarea id="note-content" name="noteContent" rows="3" placeholder="輸入備註內容"></textarea>
+    </div>
+    <button class="btn" type="button" id="note-add-btn">新增備註</button>
+    <p class="error-text" id="note-error" hidden></p>
+
+    <table>
+      <thead>
+        <tr><th class="note-col-time">時間</th><th class="note-col-user">人員</th><th>內容</th></tr>
+      </thead>
+      <tbody id="notes-table-body"></tbody>
+    </table>
+    <p class="hint" id="notes-empty-hint">尚無備註紀錄。</p>
+  </div>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-tenant-form.js"></script>
+</body>
+</html>

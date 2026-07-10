@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>合作方案｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-plan-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>合作方案</h1>
+    <a class="btn" href="plan-form.html"><i class="fa-solid fa-plus"></i> 新增方案</a>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <table id="plan-table" hidden>
+    <thead>
+      <tr>
+        <th>方案名稱</th>
+        <th>目前版本</th>
+        <th>建案數量上限</th>
+        <th>上架狀態</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="plan-table-body"></tbody>
+  </table>
+  <p class="hint" id="hint-text" hidden>下架不影響既有已套用此方案的租戶，只是新租戶看不到這個方案可選。</p>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-plan-list.js"></script>
+</body>
+</html>

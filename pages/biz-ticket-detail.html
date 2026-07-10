@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>留言詳情｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-ticket-detail.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1 id="page-title">留言詳情</h1>
+    <a class="btn secondary" href="biz-ticket-list.html">返回列表</a>
+  </div>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <div id="ticket-content" hidden>
+    <div class="card ticket-meta-card">
+      <div class="meta-row"><span class="meta-label">狀態</span><span id="meta-status"></span></div>
+      <div class="meta-row"><span class="meta-label">建立時間</span><span id="meta-created-at"></span></div>
+      <div class="meta-row"><span class="meta-label">承辦人</span><span id="meta-assignee"></span></div>
+    </div>
+
+    <div class="card thread-card">
+      <h2>對話紀錄</h2>
+      <div id="thread" class="thread"></div>
+    </div>
+
+    <div class="card" id="reply-card">
+      <h2>回覆</h2>
+      <div class="field">
+        <label for="reply-content">回覆內容</label>
+        <textarea id="reply-content" rows="4" placeholder="輸入回覆內容"></textarea>
+      </div>
+      <label class="checkbox-field" id="close-field">
+        <input type="checkbox" id="close-checkbox" /> 問題已解決，同時將此留言標記為結案
+      </label>
+      <p class="error-text" id="reply-error" hidden></p>
+      <p class="success-text" id="reply-success" hidden></p>
+      <button class="btn" type="button" id="reply-btn">送出回覆</button>
+    </div>
+    <p class="hint" id="closed-hint" hidden>此留言已結案，若還有問題請另外「新增留言」。</p>
+  </div>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-ticket-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>合作方案編輯｜新合達大平台管理後台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/page-plan-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1 id="page-title">新增方案</h1>
+    <a class="btn secondary" href="plan-list.html">返回列表</a>
+  </div>
+
+  <div class="revision-note" id="revision-note" hidden>
+    編輯這個方案會產生新版本，不會覆蓋現有版本——已經套用目前版本的租戶不受影響，除非手動幫他們升版。
+  </div>
+
+  <div class="card">
+    <form id="plan-form">
+      <div class="field">
+        <label for="name">方案名稱</label>
+        <input id="name" name="name" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="buildCaseMax">建案數量上限（累計計算，含已結案）</label>
+        <input id="buildCaseMax" name="buildCaseMax" type="number" required />
+      </div>
+
+      <div class="field">
+        <label>可用功能模組</label>
+        <table>
+          <thead>
+            <tr><th>模組</th><th>說明</th><th>開發狀況</th><th>啟用</th></tr>
+          </thead>
+          <tbody id="modules-table-body"></tbody>
+        </table>
+      </div>
+
+      <p class="error-text" id="form-error" hidden></p>
+      <p class="success-text" id="form-success" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">建立</button>
+    </form>
+  </div>
+
+  <script src="../js/auth-service.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/page-plan-form.js"></script>
+</body>
+</html>

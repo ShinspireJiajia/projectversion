@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>公告與通知｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-notification-list.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>公告與通知</h1>
+  </div>
+  <p class="lede">全體建商都會收到的平台公告，以及只發給貴公司的個別通知，都會出現在這裡。點擊標題可展開內容並標記為已讀。</p>
+
+  <p id="loading-message">載入中...</p>
+  <p class="error-text" id="error-message" hidden></p>
+
+  <ul class="notice-list" id="notice-list" hidden></ul>
+  <p class="empty-text" id="empty-text" hidden>目前沒有公告或通知</p>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-notification-list.js"></script>
+</body>
+</html>

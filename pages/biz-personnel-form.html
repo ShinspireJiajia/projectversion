@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>新增人員｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-personnel-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>新增人員</h1>
+    <a class="btn secondary" href="biz-personnel-list.html">返回列表</a>
+  </div>
+
+  <div class="card">
+    <form id="personnel-form">
+      <div class="field">
+        <label for="displayName">姓名</label>
+        <input id="displayName" name="displayName" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="title">職稱</label>
+        <input id="title" name="title" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+      </div>
+
+      <div class="field">
+        <label for="account">登入帳號</label>
+        <input id="account" name="account" type="text" required />
+        <span class="hint">此帳號僅在貴公司內使用，需與其他人員的帳號不同。</span>
+      </div>
+
+      <p class="error-text" id="form-error" hidden></p>
+      <p class="success-text" id="form-success" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">建立</button>
+      <a class="btn secondary" id="goto-list-link" href="biz-personnel-list.html" hidden>返回人員清單</a>
+    </form>
+  </div>
+
+  <div class="card" id="email-preview-card" hidden>
+    <h2>模擬寄送信件內容（原型展示用，正式環境僅寄送 Email）</h2>
+    <dl class="email-preview">
+      <dt>收件人</dt><dd id="email-preview-to"></dd>
+      <dt>登入網址</dt><dd id="email-preview-url"></dd>
+      <dt>帳號</dt><dd id="email-preview-account"></dd>
+      <dt>密碼</dt><dd id="email-preview-password"></dd>
+    </dl>
+  </div>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-personnel-form.js"></script>
+</body>
+</html>

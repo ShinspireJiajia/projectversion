@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>新增留言｜建商租戶服務入口</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style-base.css" />
+  <link rel="stylesheet" href="../css/biz-theme.css" />
+  <link rel="stylesheet" href="../css/page-biz-ticket-form.css" />
+</head>
+<body class="module-page">
+  <div class="page-head">
+    <h1>新增留言</h1>
+    <a class="btn secondary" href="biz-ticket-list.html">返回列表</a>
+  </div>
+
+  <div class="card">
+    <form id="ticket-form">
+      <div class="field">
+        <label for="subject">主旨</label>
+        <input id="subject" name="subject" type="text" placeholder="請簡短描述您的問題" required />
+      </div>
+
+      <div class="field">
+        <label for="content">內容</label>
+        <textarea id="content" name="content" rows="6" placeholder="請詳細描述您遇到的狀況，客服會盡快回覆" required></textarea>
+      </div>
+
+      <p class="error-text" id="form-error" hidden></p>
+
+      <button class="btn" type="submit" id="submit-btn">送出留言</button>
+    </form>
+  </div>
+
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/biz-auth-service.js"></script>
+  <script src="../js/page-biz-ticket-form.js"></script>
+</body>
+</html>
